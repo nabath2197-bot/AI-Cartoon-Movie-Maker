@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Cartoon Movie Maker</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#080b16;
+  color:#fff;
+}
+.app{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
+}
+h1{
+  text-align:center;
+  margin:8px 0 4px;
+  font-size:28px;
+}
+.sub{
+  text-align:center;
+  color:#aeb8d0;
+  margin-bottom:20px;
+}
+.card{
+  background:#11172a;
+  border:1px solid #27314d;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+}
+label{
+  display:block;
+  margin:12px 0 7px;
+  font-weight:bold;
+}
+textarea,select,input{
+  width:100%;
+  border:1px solid #34405e;
+  background:#080d1d;
+  color:white;
+  border-radius:12px;
+  padding:13px;
+  font-size:16px;
+}
+textarea{
+  min-height:180px;
+  resize:vertical;
+}
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+button{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:15px;
+  margin-top:12px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+#create{
+  background:#6d5dfc;
+  color:white;
+}
+#stop{
+  background:#bd3045;
+  color:white;
+}
+#download{
+  background:#159447;
+  color:white;
+  display:none;
+}
+button:disabled{
+  opacity:.45;
+}
+#status{
+  text-align:center;
+  color:#b9c5df;
+  margin:12px 0;
+}
+canvas{
+  width:100%;
+  display:block;
+  background:#000;
+  border-radius:16px;
+}
+.progress{
+  width:100%;
+  height:12px;
+  background:#252c42;
+  border-radius:10px;
+  overflow:hidden;
+}
+#bar{
+  width:0%;
+  height:100%;
+  background:#6d5dfc;
+}
+.small{
+  color:#9eabc7;
+  font-size:13px;
+  line-height:1.5;
+}
+.scene{
+  background:#0b1020;
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+}
+@media(max-width:600px){
+  .row{grid-template-columns:1fr}
+  h1{font-size:23px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>🎬 AI CARTOON MOVIE MAKER</h1>
+<div class="sub">Personal Story → Cartoon Movie</div>
+
+<div class="card">
+
+<label>📝 Paste Your Story</label>
+<textarea id="story" placeholder="अपनी पूरी कहानी यहाँ paste करें..."></textarea>
+
+<div class="row">
+
+<div>
+<label>🌐 Language</label>
+<select id="language">
+<option value="hi-IN">Hindi</option>
+<option value="en-US">English</option>
+<option value="ar-SA">Arabic</option>
+<option value="ko-KR">Korean</option>
+<option value="ja-JP">Japanese</option>
+<option value="zh-CN">Chinese</option>
+<option value="ne-NP">Nepali</option>
+<option value="es-ES">Spanish</option>
+<option value="fr-FR">French</option>
+<option value="de-DE">German</option>
+</select>
+</div>
+
+<div>
+<label>🎨 Cartoon Style</label>
+<select id="style">
+<option value="cinematic">Cinematic Cartoon</option>
+<option value="2d">2D Cartoon</option>
+<option value="3d">3D Cartoon</option>
+<option value="anime">Anime</option>
+</select>
+</div>
+
+</div>
+
+<div class="row">
+
+<div>
+<label>⏱️ Video Length</label>
+<select id="duration">
+<option value="60">1 Minute</option>
+<option value="120">2 Minutes</option>
+<option value="180">3 Minutes</option>
+<option value="240">4 Minutes</option>
+<option value="300">5 Minutes</option>
+<option value="360">6 Minutes</option>
+<option value="420">7 Minutes</option>
+<option value="480">8 Minutes</option>
+<option value="540">9 Minutes</option>
+<option value="600">10 Minutes</option>
+</select>
+</div>
+
+<div>
+<label>🗣️ Character Voice</label>
+<select id="voiceType">
+<option value="auto">Automatic</option>
+<option value="male">Male Voice</option>
+<option value="female">Female Voice</option>
+</select>
+</div>
+
+</div>
+
+<button id="create">🚀 CREATE CARTOON MOVIE</button>
+<button id="stop" disabled>⛔ STOP</button>
+
+</div>
+
+<div class="card">
+
+<div id="status">Ready</div>
+
+<div class="progress">
+<div id="bar"></div>
+</div>
+
+</div>
+
+<div class="card">
+
+<canvas id="movie" width="1280" height="720"></canvas>
+
+<button id="download">⬇️ DOWNLOAD VIDEO</button>
+
+<div class="small">
+वीडियो बनने के बाद Download दबाकर मोबाइल में save करें।
+फिर आप अपनी बनाई हुई video को जहाँ चाहें इस्तेमाल कर सकते हैं।
+</div>
+
+</div>
+
+<div class="card">
+
+<b>🎭 Detected Story Scenes</b>
+<div id="scenes"></div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   AI CARTOON MOVIE MAKER
+   Personal Prototype Engine
+   ========================================================= */
+
+const canvas = document.getElementById("movie");
+const ctx = canvas.getContext("2d");
+
+const storyBox = document.getElementById("story");
+const language = document.getElementById("language");
+const durationBox = document.getElementById("duration");
+const voiceType = document.getElementById("voiceType");
+const styleBox = document.getElementById("style");
+
+const createBtn = document.getElementById("create");
+const stopBtn = document.getElementById("stop");
+const downloadBtn = document.getElementById("download");
+
+const statusBox = document.getElementById("status");
+const bar = document.getElementById("bar");
+const scenesBox = document.getElementById("scenes");
+
+let running = false;
+let stopRequested = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let audioCtx = null;
+let animationTimer = null;
+
+
+/* ---------------------------------------------------------
+   STORY → SCENES
+--------------------------------------------------------- */
+
+function makeScenes(text){
+
+  text = text.trim();
+
+  if(!text){
+    return [];
+  }
+
+  /*
+    Split by sentences first.
+  */
+
+  let parts = text
+    .replace(/\r/g," ")
+    .split(/[.!?।]+/)
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  /*
+    If story is very short, create one scene.
+  */
+
+  if(parts.length === 0){
+    parts = [text];
+  }
+
+  /*
+    Keep scene count manageable.
+  */
+
+  return parts.slice(0,40);
+}
+
+
+/* ---------------------------------------------------------
+   SIMPLE CHARACTER DETECTION
+--------------------------------------------------------- */
+
+function detectCharacter(text){
+
+  const t = text.toLowerCase();
+
+  const animals = [];
+
+  if(/dog|puppy|कुत्ता|कुत्ते|chien|perro|hund|犬|강아지|狗|كلب|कुकुर/.test(t))
+    animals.push("🐕");
+
+  if(/cat|बिल्ली|gato|chat|katze|猫|고양이|قط/.test(t))
+    animals.push("🐈");
+
+  if(/lion|शेर|león|lion|löwe|ライオン|사자|狮子|أسد/.test(t))
+    animals.push("🦁");
+
+  if(/bird|पक्षी|oiseau|pájaro|vogel|鳥|새|鸟|طائر/.test(t))
+    animals.push("🐦");
+
+  return animals;
+}
+
+
+/* ---------------------------------------------------------
+   DRAW CARTOON BACKGROUND
+--------------------------------------------------------- */
+
+function drawBackground(sceneIndex,total){
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const style = styleBox.value;
+
+  let top = "#1c2850";
+  let bottom = "#101827";
+
+  if(style === "anime"){
+    top = "#36225c";
+    bottom = "#141a34";
+  }
+
+  if(style === "2d"){
+    top = "#244d66";
+    bottom = "#132533";
+  }
+
+  if(style === "3d"){
+    top = "#172d50";
+    bottom = "#080e19";
+  }
+
+  const g = ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,top);
+  g.addColorStop(1,bottom);
+
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,w,h);
+
+  /*
+    Stars
+  */
+
+  for(let i=0;i<90;i++){
+
+    const x = (i*137 + sceneIndex*17) % w;
+    const y = (i*71) % 380;
+
+    ctx.fillStyle = "rgba(255,255,255,.7)";
+    ctx.beginPath();
+    ctx.arc(x,y,2,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  /*
+    Moon
+  */
+
+  ctx.fillStyle = "#fff2b8";
+  ctx.beginPath();
+  ctx.arc(w-150,130,55,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Ground
+  */
+
+  ctx.fillStyle = "#101b24";
+  ctx.fillRect(0,530,w,190);
+
+  /*
+    City/buildings
+  */
+
+  for(let i=0;i<14;i++){
+
+    const bh = 80 + ((i*37)%170);
+    const x = i*100;
+
+    ctx.fillStyle = i%2 ? "#172536" : "#1d2d42";
+    ctx.fillRect(x,530-bh,75,bh);
+
+    for(let yy=540-bh; yy<520; yy+=30){
+
+      ctx.fillStyle = "rgba(255,220,120,.65)";
+
+      for(let xx=x+12; xx<x+65; xx+=25){
+
+        ctx.fillRect(xx,yy,9,12);
+
+      }
+    }
+  }
+}
+
+
+/* ---------------------------------------------------------
+   DRAW ROBOT / CARTOON HUMAN
+--------------------------------------------------------- */
+
+function drawHuman(x,y,gender="male"){
+
+  /*
+    Body
+  */
+
+  ctx.fillStyle = gender === "female" ? "#d64b9b" : "#4169e1";
+  ctx.fillRect(x-45,y,90,130);
+
+  /*
+    Head
+  */
+
+  ctx.fillStyle = "#f2c6a0";
+  ctx.beginPath();
+  ctx.arc(x,y-45,48,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Hair
+  */
+
+  ctx.fillStyle = gender === "female" ? "#321b24" : "#20242c";
+
+  ctx.beginPath();
+  ctx.arc(x,y-60,45,Math.PI,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Eyes
+  */
+
+  ctx.fillStyle = "#111";
+
+  ctx.beginPath();
+  ctx.arc(x-17,y-48,5,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(x+17,y-48,5,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Smile
+  */
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(x,y-35,17,0,Math.PI);
+  ctx.stroke();
+
+  /*
+    Arms
+  */
+
+  ctx.strokeStyle = "#f2c6a0";
+  ctx.lineWidth = 18;
+
+  ctx.beginPath();
+  ctx.moveTo(x-45,y+20);
+  ctx.lineTo(x-100,y+70);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x+45,y+20);
+  ctx.lineTo(x+100,y+70);
+  ctx.stroke();
+
+}
+
+
+/* ---------------------------------------------------------
+   DRAW DOG
+--------------------------------------------------------- */
+
+function drawDog(x,y){
+
+  ctx.fillStyle = "#a96c38";
+
+  /*
+    Body
+  */
+
+  ctx.beginPath();
+  ctx.ellipse(x,y,95,55,0,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Head
+  */
+
+  ctx.beginPath();
+  ctx.arc(x-75,y-35,55,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Ears
+  */
+
+  ctx.fillStyle = "#70411f";
+
+  ctx.beginPath();
+  ctx.moveTo(x-110,y-70);
+  ctx.lineTo(x-145,y-125);
+  ctx.lineTo(x-75,y-90);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(x-45,y-75);
+  ctx.lineTo(x-20,y-125);
+  ctx.lineTo(x-10,y-60);
+  ctx.fill();
+
+  /*
+    Eyes
+  */
+
+  ctx.fillStyle = "#111";
+
+  ctx.beginPath();
+  ctx.arc(x-95,y-45,7,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Nose
+  */
+
+  ctx.beginPath();
+  ctx.arc(x-128,y-35,9,0,Math.PI*2);
+  ctx.fill();
+
+  /*
+    Tail
+  */
+
+  ctx.strokeStyle = "#a96c38";
+  ctx.lineWidth = 18;
+
+  ctx.beginPath();
+  ctx.arc(x+100,y-30,55,-1,1);
+  ctx.stroke();
+}
+
+
+/* ---------------------------------------------------------
+   TEXT WRAPPING
+--------------------------------------------------------- */
+
+function wrapText(text,maxWidth){
+
+  const words = text.split(/\s+/);
+  const lines = [];
+
+  let line = "";
+
+  for(const word of words){
+
+    const test = line ? line+" "+word : word;
+
+    if(ctx.measureText(test).width > maxWidth){
+
+      if(line) lines.push(line);
+
+      line = word;
+
+    }else{
+
+      line = test;
+
+    }
+  }
+
+  if(line) lines.push(line);
+
+  return lines.slice(0,5);
+}
+
+
+/* ---------------------------------------------------------
+   DRAW SCENE
+--------------------------------------------------------- */
+
+function drawScene(sceneText,index,total,time){
+
+  drawBackground(index,total);
+
+  const animals = detectCharacter(sceneText);
+
+  /*
+    Main character
+  */
+
+  const bounce = Math.sin(time/300)*8;
+
+  drawHuman(
+    canvas.width/2-180,
+    390+bounce,
+    index%2 ? "female" : "male"
+  );
+
+  /*
+    Animal
+  */
+
+  if(animals.length){
+
+    drawDog(
+      canvas.width/2+220,
+      450+bounce
+    );
+
+  }
+
+  /*
+    Scene number
+  */
+
+  ctx.fillStyle = "rgba(0,0,0,.55)";
+  ctx.fillRect(30,30,250,55);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 28px Arial";
+  ctx.fillText(
+    "SCENE "+(index+1)+" / "+total,
+    50,
+    67
+  );
+
+  /*
+    Story text
+  */
+
+  ctx.fillStyle = "rgba(0,0,0,.72)";
+  ctx.fillRect(50,570,1180,110);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "27px Arial";
+
+  const lines = wrapText(sceneText,1100);
+
+  lines.forEach((line,i)=>{
+
+    ctx.fillText(
+      line,
+      90,
+      610+i*32
+    );
+
+  });
+
+}
+
+
+/* ---------------------------------------------------------
+   AUDIO
+--------------------------------------------------------- */
+
+function beep(type="normal"){
+
+  try{
+
+    if(!audioCtx){
+      audioCtx = new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+    }
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    let freq = 440;
+
+    if(type==="start") freq=660;
+    if(type==="scene") freq=520;
+    if(type==="animal") freq=220;
+    if(type==="finish") freq=880;
+
+    osc.frequency.value=freq;
+
+    gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+
+    gain.gain.exponentialRampToValueAtTime(
+      .12,
+      audioCtx.currentTime+.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .0001,
+      audioCtx.currentTime+.25
+    );
+
+    osc.start();
+
+    osc.stop(
+      audioCtx.currentTime+.27
+    );
+
+  }catch(e){}
+
+}
+
+
+/* ---------------------------------------------------------
+   VOICE
+--------------------------------------------------------- */
+
+function speak(text){
+
+  if(!("speechSynthesis" in window))
+    return;
+
+  window.speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+  utterance.lang = language.value;
+
+  const selected = voiceType.value;
+
+  const voices =
+    window.speechSynthesis.getVoices();
+
+  const matching =
+    voices.filter(v =>
+      v.lang.toLowerCase()
+      .startsWith(
+        language.value.substring(0,2).toLowerCase()
+      )
+    );
+
+  if(matching.length){
+
+    let chosen = matching[0];
+
+    if(selected==="female"){
+
+      const female =
+        matching.find(v =>
+          /female|zira|samantha|susan|google/i.test(v.name)
+        );
+
+      if(female) chosen=female;
+    }
+
+    if(selected==="male"){
+
+      const male =
+        matching.find(v =>
+          /male|david|alex|daniel|mark|google/i.test(v.name)
+        );
+
+      if(male) chosen=male;
+    }
+
+    utterance.voice=chosen;
+  }
+
+  utterance.rate=.9;
+  utterance.pitch=
+    selected==="female" ? 1.15 : .9;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+
+/* ---------------------------------------------------------
+   SCENE LIST
+--------------------------------------------------------- */
+
+function showScenes(scenes){
+
+  scenesBox.innerHTML="";
+
+  scenes.forEach((scene,i)=>{
+
+    const div=document.createElement("div");
+
+    div.className="scene";
+
+    div.innerHTML =
+      "<b>Scene "+(i+1)+"</b><br>"+
+      scene;
+
+    scenesBox.appendChild(div);
+
+  });
+
+}
+
+
+/* ---------------------------------------------------------
+   CREATE VIDEO
+--------------------------------------------------------- */
+
+async function createMovie(){
+
+  const story =
+    storyBox.value.trim();
+
+  if(!story){
+
+    alert(
+      "पहले अपनी कहानी paste करें।"
+    );
+
+    return;
+  }
+
+  const scenes =
+    makeScenes(story);
+
+  if(!scenes.length){
+
+    alert("कहानी नहीं मिली।");
+
+    return;
+  }
+
+  showScenes(scenes);
+
+  const duration =
+    Number(durationBox.value);
+
+  running=true;
+  stopRequested=false;
+
+  createBtn.disabled=true;
+  stopBtn.disabled=false;
+  downloadBtn.style.display="none";
+
+  recordedChunks=[];
+
+  statusBox.innerText =
+    "Preparing movie...";
+
+  beep("start");
+
+  /*
+    Canvas video stream
+  */
+
+  const stream =
+    canvas.captureStream(30);
+
+  /*
+    Browser-supported video format
+  */
+
+  let mime="video/webm";
+
+  if(MediaRecorder.isTypeSupported(
+    "video/webm;codecs=vp9,opus"
+  )){
+    mime="video/webm;codecs=vp9,opus";
+  }
+
+  mediaRecorder =
+    new MediaRecorder(
+      stream,
+      {mimeType:mime}
+    );
+
+  mediaRecorder.ondataavailable=e=>{
+
+    if(e.data && e.data.size>0)
+      recordedChunks.push(e.data);
+
+  };
+
+  mediaRecorder.onstop=()=>{
+
+    const blob =
+      new Blob(
+        recordedChunks,
+        {type:mime}
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    downloadBtn.style.display="block";
+
+    downloadBtn.onclick=()=>{
+
+      const a =
+        document.createElement("a");
+
+      a.href=url;
+
+      a.download =
+        "AI-Cartoon-Movie.webm";
+
+      a.click();
+
+    };
+
+    statusBox.innerText =
+      "🎉 Movie ready! Download दबाएँ।";
+
+    bar.style.width="100%";
+
+  };
+
+  mediaRecorder.start();
+
+  /*
+    Divide selected duration
+    between scenes.
+  */
+
+  const sceneTime =
+    Math.max(
+      2000,
+      (duration*1000)/scenes.length
+    );
+
+  for(let i=0;i<scenes.length;i++){
+
+    if(stopRequested) break;
+
+    const scene=scenes[i];
+
+    statusBox.innerText =
+      "🎬 Creating Scene "+
+      (i+1)+" / "+scenes.length;
+
+    beep("scene");
+
+    /*
+      Narration
+    */
+
+    speak(scene);
+
+    const start =
+      performance.now();
+
+    while(
+      performance.now()-start < sceneTime
+    ){
+
+      if(stopRequested)
+        break;
+
+      const now =
+        performance.now();
+
+      drawScene(
+        scene,
+        i,
+        scenes.length,
+        now
+      );
+
+      const elapsed =
+        i*sceneTime +
+        (now-start);
+
+      const totalMs =
+        scenes.length*sceneTime;
+
+      const percent =
+        Math.min(
+          99,
+          (elapsed/totalMs)*100
+        );
+
+      bar.style.width =
+        percent+"%";
+
+      await new Promise(
+        resolve =>
+          requestAnimationFrame(resolve)
+      );
+    }
+
+    /*
+      Small animal sound cue
+    */
+
+    if(detectCharacter(scene).length){
+      beep("animal");
+    }
+
+  }
+
+  if(!stopRequested){
+
+    beep("finish");
+
+    statusBox.innerText =
+      "Finishing movie...";
+
+    /*
+      Keep final frame briefly.
+    */
+
+    const finish =
+      performance.now();
+
+    while(
+      performance.now()-finish < 1000
+    ){
+
+      drawScene(
+        scenes[scenes.length-1],
+        scenes.length-1,
+        scenes.length,
+        performance.now()
+      );
+
+      await new Promise(
+        resolve =>
+          requestAnimationFrame(resolve)
+      );
+
+    }
+
+  }
+
+  if(mediaRecorder.state!=="inactive")
+    mediaRecorder.stop();
+
+  running=false;
+
+  createBtn.disabled=false;
+  stopBtn.disabled=true;
+
+}
+
+
+/* ---------------------------------------------------------
+   STOP
+--------------------------------------------------------- */
+
+stopBtn.onclick=()=>{
+
+  if(!running)
+    return;
+
+  stopRequested=true;
+
+  window.speechSynthesis.cancel();
+
+  statusBox.innerText =
+    "Stopping...";
+
+};
+
+
+/* ---------------------------------------------------------
+   CREATE
+--------------------------------------------------------- */
+
+createBtn.onclick=()=>{
+
+  createMovie();
+
+};
+
+
+/* ---------------------------------------------------------
+   DEFAULT SCREEN
+--------------------------------------------------------- */
+
+drawBackground(0,1);
+
+ctx.fillStyle="#fff";
+ctx.font="bold 48px Arial";
+ctx.textAlign="center";
+
+ctx.fillText(
+  "AI CARTOON MOVIE MAKER",
+  canvas.width/2,
+  330
+);
+
+ctx.font="28px Arial";
+
+ctx.fillText(
+  "Paste Story → Create Movie",
+  canvas.width/2,
+  390
+);
+
+ctx.textAlign="left";
+
+
+/* Load browser voices */
+
+if("speechSynthesis" in window){
+
+  window.speechSynthesis.onvoiceschanged=()=>{
+    window.speechSynthesis.getVoices();
+  };
+
+}
+
+</script>
+
+</body>
+  </html>
