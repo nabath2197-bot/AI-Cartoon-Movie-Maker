@@ -7,57 +7,67 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#080b16;
+  background:#060914;
   color:#fff;
 }
+
 .app{
-  max-width:900px;
+  max-width:950px;
   margin:auto;
-  padding:18px;
+  padding:16px;
 }
+
 h1{
   text-align:center;
   margin:8px 0 4px;
   font-size:28px;
 }
+
 .sub{
   text-align:center;
-  color:#aeb8d0;
-  margin-bottom:20px;
+  color:#aeb9d4;
+  margin-bottom:18px;
 }
+
 .card{
-  background:#11172a;
-  border:1px solid #27314d;
+  background:#11182b;
+  border:1px solid #2a3655;
   border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
+  padding:17px;
+  margin-bottom:15px;
 }
+
 label{
   display:block;
   margin:12px 0 7px;
   font-weight:bold;
 }
-textarea,select,input{
+
+textarea,select{
   width:100%;
-  border:1px solid #34405e;
+  border:1px solid #374463;
   background:#080d1d;
-  color:white;
+  color:#fff;
   border-radius:12px;
   padding:13px;
   font-size:16px;
 }
+
 textarea{
-  min-height:180px;
+  min-height:170px;
   resize:vertical;
 }
+
 .row{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
+
 button{
   width:100%;
   border:0;
@@ -66,58 +76,80 @@ button{
   margin-top:12px;
   font-size:17px;
   font-weight:bold;
-  cursor:pointer;
 }
+
 #create{
   background:#6d5dfc;
   color:white;
 }
+
 #stop{
-  background:#bd3045;
+  background:#c92f48;
   color:white;
 }
+
 #download{
   background:#159447;
   color:white;
   display:none;
 }
+
 button:disabled{
   opacity:.45;
 }
+
 #status{
   text-align:center;
-  color:#b9c5df;
+  color:#c4cee3;
   margin:12px 0;
 }
+
+.progress{
+  width:100%;
+  height:12px;
+  background:#252d43;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#bar{
+  width:0%;
+  height:100%;
+  background:#7567ff;
+  transition:width .15s;
+}
+
 canvas{
   width:100%;
   display:block;
   background:#000;
   border-radius:16px;
 }
-.progress{
-  width:100%;
-  height:12px;
-  background:#252c42;
-  border-radius:10px;
-  overflow:hidden;
-}
-#bar{
-  width:0%;
-  height:100%;
-  background:#6d5dfc;
-}
-.small{
-  color:#9eabc7;
-  font-size:13px;
-  line-height:1.5;
-}
+
 .scene{
-  background:#0b1020;
-  padding:10px;
+  background:#0b1121;
+  border:1px solid #202c47;
+  padding:11px;
   border-radius:10px;
   margin-top:8px;
 }
+
+.small{
+  color:#9daac5;
+  font-size:13px;
+  line-height:1.5;
+  margin-top:10px;
+}
+
+.badge{
+  display:inline-block;
+  background:#202b48;
+  padding:5px 9px;
+  border-radius:20px;
+  margin:3px;
+  font-size:12px;
+}
+
 @media(max-width:600px){
   .row{grid-template-columns:1fr}
   h1{font-size:23px}
@@ -130,17 +162,26 @@ canvas{
 <div class="app">
 
 <h1>🎬 AI CARTOON MOVIE MAKER</h1>
-<div class="sub">Personal Story → Cartoon Movie</div>
+
+<div class="sub">
+Story → Scenes → Characters → Animation → Movie
+</div>
 
 <div class="card">
 
 <label>📝 Paste Your Story</label>
-<textarea id="story" placeholder="अपनी पूरी कहानी यहाँ paste करें..."></textarea>
+
+<textarea id="story"
+placeholder="अपनी पूरी कहानी यहाँ paste करें...
+
+उदाहरण:
+एक लड़का जंगल में जाता है। उसे एक कुत्ता मिलता है। अचानक बारिश शुरू होती है। दोनों एक पुराने घर की तरफ दौड़ते हैं।"></textarea>
 
 <div class="row">
 
 <div>
 <label>🌐 Language</label>
+
 <select id="language">
 <option value="hi-IN">Hindi</option>
 <option value="en-US">English</option>
@@ -156,11 +197,12 @@ canvas{
 </div>
 
 <div>
-<label>🎨 Cartoon Style</label>
+<label>🎨 Style</label>
+
 <select id="style">
 <option value="cinematic">Cinematic Cartoon</option>
-<option value="2d">2D Cartoon</option>
 <option value="3d">3D Cartoon</option>
+<option value="2d">2D Cartoon</option>
 <option value="anime">Anime</option>
 </select>
 </div>
@@ -170,23 +212,17 @@ canvas{
 <div class="row">
 
 <div>
-<label>⏱️ Video Length</label>
+<label>⏱️ Movie Length</label>
+
 <select id="duration">
 <option value="60">1 Minute</option>
 <option value="120">2 Minutes</option>
-<option value="180">3 Minutes</option>
-<option value="240">4 Minutes</option>
-<option value="300">5 Minutes</option>
-<option value="360">6 Minutes</option>
-<option value="420">7 Minutes</option>
-<option value="480">8 Minutes</option>
-<option value="540">9 Minutes</option>
-<option value="600">10 Minutes</option>
 </select>
 </div>
 
 <div>
-<label>🗣️ Character Voice</label>
+<label>🗣️ Voice</label>
+
 <select id="voiceType">
 <option value="auto">Automatic</option>
 <option value="male">Male Voice</option>
@@ -196,10 +232,16 @@ canvas{
 
 </div>
 
-<button id="create">🚀 CREATE CARTOON MOVIE</button>
-<button id="stop" disabled>⛔ STOP</button>
+<button id="create">
+🚀 CREATE CARTOON MOVIE
+</button>
+
+<button id="stop" disabled>
+⛔ STOP
+</button>
 
 </div>
+
 
 <div class="card">
 
@@ -211,521 +253,220 @@ canvas{
 
 </div>
 
+
 <div class="card">
 
 <canvas id="movie" width="1280" height="720"></canvas>
 
-<button id="download">⬇️ DOWNLOAD VIDEO</button>
+<button id="download">
+⬇️ DOWNLOAD VIDEO
+</button>
 
 <div class="small">
 वीडियो बनने के बाद Download दबाकर मोबाइल में save करें।
-फिर आप अपनी बनाई हुई video को जहाँ चाहें इस्तेमाल कर सकते हैं।
 </div>
 
 </div>
+
 
 <div class="card">
 
 <b>🎭 Detected Story Scenes</b>
+
 <div id="scenes"></div>
 
 </div>
 
 </div>
 
+
 <script>
 
-/* =========================================================
-   AI CARTOON MOVIE MAKER
-   Personal Prototype Engine
-   ========================================================= */
+const canvas=document.getElementById("movie");
+const ctx=canvas.getContext("2d");
 
-const canvas = document.getElementById("movie");
-const ctx = canvas.getContext("2d");
+const storyBox=document.getElementById("story");
+const language=document.getElementById("language");
+const styleBox=document.getElementById("style");
+const durationBox=document.getElementById("duration");
+const voiceType=document.getElementById("voiceType");
 
-const storyBox = document.getElementById("story");
-const language = document.getElementById("language");
-const durationBox = document.getElementById("duration");
-const voiceType = document.getElementById("voiceType");
-const styleBox = document.getElementById("style");
+const createBtn=document.getElementById("create");
+const stopBtn=document.getElementById("stop");
+const downloadBtn=document.getElementById("download");
 
-const createBtn = document.getElementById("create");
-const stopBtn = document.getElementById("stop");
-const downloadBtn = document.getElementById("download");
+const statusBox=document.getElementById("status");
+const bar=document.getElementById("bar");
+const scenesBox=document.getElementById("scenes");
 
-const statusBox = document.getElementById("status");
-const bar = document.getElementById("bar");
-const scenesBox = document.getElementById("scenes");
+let running=false;
+let stopRequested=false;
+let mediaRecorder=null;
+let recordedChunks=[];
+let audioCtx=null;
 
-let running = false;
-let stopRequested = false;
-let mediaRecorder = null;
-let recordedChunks = [];
-let audioCtx = null;
-let animationTimer = null;
+let movieCharacters=[];
+let activeScene=0;
 
 
-/* ---------------------------------------------------------
-   STORY → SCENES
---------------------------------------------------------- */
+/* =========================
+   STORY SCENE ENGINE
+========================= */
 
 function makeScenes(text){
 
-  text = text.trim();
-
-  if(!text){
-    return [];
-  }
-
-  /*
-    Split by sentences first.
-  */
-
-  let parts = text
+  let parts=text
     .replace(/\r/g," ")
     .split(/[.!?।]+/)
-    .map(x => x.trim())
+    .map(x=>x.trim())
     .filter(Boolean);
 
-  /*
-    If story is very short, create one scene.
-  */
+  if(!parts.length)
+    return [];
 
-  if(parts.length === 0){
-    parts = [text];
-  }
-
-  /*
-    Keep scene count manageable.
-  */
-
-  return parts.slice(0,40);
+  return parts.slice(0,20);
 }
 
 
-/* ---------------------------------------------------------
-   SIMPLE CHARACTER DETECTION
---------------------------------------------------------- */
+/* =========================
+   CHARACTER DETECTION
+========================= */
 
-function detectCharacter(text){
+function detectCharacters(text){
 
-  const t = text.toLowerCase();
+  const t=text.toLowerCase();
 
-  const animals = [];
+  const result={
+    human:true,
+    female:false,
+    dog:false,
+    cat:false,
+    lion:false,
+    bird:false,
+    action:false,
+    love:false,
+    rain:false
+  };
 
-  if(/dog|puppy|कुत्ता|कुत्ते|chien|perro|hund|犬|강아지|狗|كلب|कुकुर/.test(t))
-    animals.push("🐕");
+  if(
+    /girl|woman|lady|लड़की|महिला|औरत|नारी|여자|女性/
+    .test(t)
+  ){
+    result.female=true;
+  }
 
-  if(/cat|बिल्ली|gato|chat|katze|猫|고양이|قط/.test(t))
-    animals.push("🐈");
+  if(
+    /dog|puppy|कुत्ता|कुत्ते|कुकुर|chien|perro|hund|犬|강아지|狗|كلب/
+    .test(t)
+  ){
+    result.dog=true;
+  }
 
-  if(/lion|शेर|león|lion|löwe|ライオン|사자|狮子|أسد/.test(t))
-    animals.push("🦁");
+  if(
+    /cat|बिल्ली|gato|chat|katze|猫|고양이|قط/
+    .test(t)
+  ){
+    result.cat=true;
+  }
 
-  if(/bird|पक्षी|oiseau|pájaro|vogel|鳥|새|鸟|طائر/.test(t))
-    animals.push("🐦");
+  if(
+    /lion|शेर|leon|löwe|ライオン|사자|狮子|أسد/
+    .test(t)
+  ){
+    result.lion=true;
+  }
 
-  return animals;
+  if(
+    /bird|पक्षी|चिड़िया|oiseau|pájaro|vogel|鳥|새|鸟|طائر/
+    .test(t)
+  ){
+    result.bird=true;
+  }
+
+  if(
+    /fight|attack|run|running|chase|battle|लड़ाई|दौड़|भाग|पीछा|हमला|युद्ध/
+    .test(t)
+  ){
+    result.action=true;
+  }
+
+  if(
+    /love|heart|friend|friendship|प्यार|प्रेम|दोस्त|दोस्ती|मोहब्बत/
+    .test(t)
+  ){
+    result.love=true;
+  }
+
+  if(
+    /rain|बारिश|वर्षा|बৃষ্টি|雨|비|مطر/
+    .test(t)
+  ){
+    result.rain=true;
+  }
+
+  return result;
 }
 
 
-/* ---------------------------------------------------------
-   DRAW CARTOON BACKGROUND
---------------------------------------------------------- */
-
-function drawBackground(sceneIndex,total){
-
-  const w = canvas.width;
-  const h = canvas.height;
-
-  const style = styleBox.value;
-
-  let top = "#1c2850";
-  let bottom = "#101827";
-
-  if(style === "anime"){
-    top = "#36225c";
-    bottom = "#141a34";
-  }
-
-  if(style === "2d"){
-    top = "#244d66";
-    bottom = "#132533";
-  }
-
-  if(style === "3d"){
-    top = "#172d50";
-    bottom = "#080e19";
-  }
-
-  const g = ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,top);
-  g.addColorStop(1,bottom);
-
-  ctx.fillStyle = g;
-  ctx.fillRect(0,0,w,h);
-
-  /*
-    Stars
-  */
-
-  for(let i=0;i<90;i++){
-
-    const x = (i*137 + sceneIndex*17) % w;
-    const y = (i*71) % 380;
-
-    ctx.fillStyle = "rgba(255,255,255,.7)";
-    ctx.beginPath();
-    ctx.arc(x,y,2,0,Math.PI*2);
-    ctx.fill();
-  }
-
-  /*
-    Moon
-  */
-
-  ctx.fillStyle = "#fff2b8";
-  ctx.beginPath();
-  ctx.arc(w-150,130,55,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Ground
-  */
-
-  ctx.fillStyle = "#101b24";
-  ctx.fillRect(0,530,w,190);
-
-  /*
-    City/buildings
-  */
-
-  for(let i=0;i<14;i++){
-
-    const bh = 80 + ((i*37)%170);
-    const x = i*100;
-
-    ctx.fillStyle = i%2 ? "#172536" : "#1d2d42";
-    ctx.fillRect(x,530-bh,75,bh);
-
-    for(let yy=540-bh; yy<520; yy+=30){
-
-      ctx.fillStyle = "rgba(255,220,120,.65)";
-
-      for(let xx=x+12; xx<x+65; xx+=25){
-
-        ctx.fillRect(xx,yy,9,12);
-
-      }
-    }
-  }
-}
-
-
-/* ---------------------------------------------------------
-   DRAW ROBOT / CARTOON HUMAN
---------------------------------------------------------- */
-
-function drawHuman(x,y,gender="male"){
-
-  /*
-    Body
-  */
-
-  ctx.fillStyle = gender === "female" ? "#d64b9b" : "#4169e1";
-  ctx.fillRect(x-45,y,90,130);
-
-  /*
-    Head
-  */
-
-  ctx.fillStyle = "#f2c6a0";
-  ctx.beginPath();
-  ctx.arc(x,y-45,48,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Hair
-  */
-
-  ctx.fillStyle = gender === "female" ? "#321b24" : "#20242c";
-
-  ctx.beginPath();
-  ctx.arc(x,y-60,45,Math.PI,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Eyes
-  */
-
-  ctx.fillStyle = "#111";
-
-  ctx.beginPath();
-  ctx.arc(x-17,y-48,5,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(x+17,y-48,5,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Smile
-  */
-
-  ctx.strokeStyle = "#111";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.arc(x,y-35,17,0,Math.PI);
-  ctx.stroke();
-
-  /*
-    Arms
-  */
-
-  ctx.strokeStyle = "#f2c6a0";
-  ctx.lineWidth = 18;
-
-  ctx.beginPath();
-  ctx.moveTo(x-45,y+20);
-  ctx.lineTo(x-100,y+70);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(x+45,y+20);
-  ctx.lineTo(x+100,y+70);
-  ctx.stroke();
-
-}
-
-
-/* ---------------------------------------------------------
-   DRAW DOG
---------------------------------------------------------- */
-
-function drawDog(x,y){
-
-  ctx.fillStyle = "#a96c38";
-
-  /*
-    Body
-  */
-
-  ctx.beginPath();
-  ctx.ellipse(x,y,95,55,0,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Head
-  */
-
-  ctx.beginPath();
-  ctx.arc(x-75,y-35,55,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Ears
-  */
-
-  ctx.fillStyle = "#70411f";
-
-  ctx.beginPath();
-  ctx.moveTo(x-110,y-70);
-  ctx.lineTo(x-145,y-125);
-  ctx.lineTo(x-75,y-90);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(x-45,y-75);
-  ctx.lineTo(x-20,y-125);
-  ctx.lineTo(x-10,y-60);
-  ctx.fill();
-
-  /*
-    Eyes
-  */
-
-  ctx.fillStyle = "#111";
-
-  ctx.beginPath();
-  ctx.arc(x-95,y-45,7,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Nose
-  */
-
-  ctx.beginPath();
-  ctx.arc(x-128,y-35,9,0,Math.PI*2);
-  ctx.fill();
-
-  /*
-    Tail
-  */
-
-  ctx.strokeStyle = "#a96c38";
-  ctx.lineWidth = 18;
-
-  ctx.beginPath();
-  ctx.arc(x+100,y-30,55,-1,1);
-  ctx.stroke();
-}
-
-
-/* ---------------------------------------------------------
-   TEXT WRAPPING
---------------------------------------------------------- */
-
-function wrapText(text,maxWidth){
-
-  const words = text.split(/\s+/);
-  const lines = [];
-
-  let line = "";
-
-  for(const word of words){
-
-    const test = line ? line+" "+word : word;
-
-    if(ctx.measureText(test).width > maxWidth){
-
-      if(line) lines.push(line);
-
-      line = word;
-
-    }else{
-
-      line = test;
-
-    }
-  }
-
-  if(line) lines.push(line);
-
-  return lines.slice(0,5);
-}
-
-
-/* ---------------------------------------------------------
-   DRAW SCENE
---------------------------------------------------------- */
-
-function drawScene(sceneText,index,total,time){
-
-  drawBackground(index,total);
-
-  const animals = detectCharacter(sceneText);
-
-  /*
-    Main character
-  */
-
-  const bounce = Math.sin(time/300)*8;
-
-  drawHuman(
-    canvas.width/2-180,
-    390+bounce,
-    index%2 ? "female" : "male"
-  );
-
-  /*
-    Animal
-  */
-
-  if(animals.length){
-
-    drawDog(
-      canvas.width/2+220,
-      450+bounce
-    );
-
-  }
-
-  /*
-    Scene number
-  */
-
-  ctx.fillStyle = "rgba(0,0,0,.55)";
-  ctx.fillRect(30,30,250,55);
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 28px Arial";
-  ctx.fillText(
-    "SCENE "+(index+1)+" / "+total,
-    50,
-    67
-  );
-
-  /*
-    Story text
-  */
-
-  ctx.fillStyle = "rgba(0,0,0,.72)";
-  ctx.fillRect(50,570,1180,110);
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "27px Arial";
-
-  const lines = wrapText(sceneText,1100);
-
-  lines.forEach((line,i)=>{
-
-    ctx.fillText(
-      line,
-      90,
-      610+i*32
-    );
-
-  });
-
-}
-
-
-/* ---------------------------------------------------------
-   AUDIO
---------------------------------------------------------- */
-
-function beep(type="normal"){
+/* =========================
+   AUDIO ENGINE
+========================= */
+
+function initAudio(){
 
   try{
 
     if(!audioCtx){
-      audioCtx = new (
+
+      audioCtx=new(
         window.AudioContext ||
         window.webkitAudioContext
       )();
+
     }
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    if(audioCtx.state==="suspended")
+      audioCtx.resume();
+
+  }catch(e){}
+
+}
+
+
+function tone(freq,duration=.18,type="sine",volume=.04){
+
+  try{
+
+    initAudio();
+
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+
+    osc.type=type;
+    osc.frequency.value=freq;
 
     osc.connect(gain);
     gain.connect(audioCtx.destination);
 
-    let freq = 440;
-
-    if(type==="start") freq=660;
-    if(type==="scene") freq=520;
-    if(type==="animal") freq=220;
-    if(type==="finish") freq=880;
-
-    osc.frequency.value=freq;
-
-    gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+    gain.gain.setValueAtTime(
+      .0001,
+      audioCtx.currentTime
+    );
 
     gain.gain.exponentialRampToValueAtTime(
-      .12,
+      volume,
       audioCtx.currentTime+.02
     );
 
     gain.gain.exponentialRampToValueAtTime(
       .0001,
-      audioCtx.currentTime+.25
+      audioCtx.currentTime+duration
     );
 
     osc.start();
 
     osc.stop(
-      audioCtx.currentTime+.27
+      audioCtx.currentTime+duration+.02
     );
 
   }catch(e){}
@@ -733,9 +474,41 @@ function beep(type="normal"){
 }
 
 
-/* ---------------------------------------------------------
-   VOICE
---------------------------------------------------------- */
+function sceneSound(info){
+
+  if(info.action){
+
+    tone(180,.12,"sawtooth",.035);
+    setTimeout(
+      ()=>tone(300,.14,"square",.03),
+      120
+    );
+
+  }else if(info.rain){
+
+    tone(700,.08,"triangle",.018);
+
+  }else if(info.love){
+
+    tone(523,.18,"sine",.03);
+
+    setTimeout(
+      ()=>tone(659,.2,"sine",.025),
+      180
+    );
+
+  }else{
+
+    tone(440,.12,"sine",.025);
+
+  }
+
+}
+
+
+/* =========================
+   SPEECH
+========================= */
 
 function speak(text){
 
@@ -744,91 +517,1243 @@ function speak(text){
 
   window.speechSynthesis.cancel();
 
-  const utterance =
-    new SpeechSynthesisUtterance(text);
+  const u=new SpeechSynthesisUtterance(text);
 
-  utterance.lang = language.value;
+  u.lang=language.value;
+  u.rate=.88;
 
-  const selected = voiceType.value;
-
-  const voices =
+  const voices=
     window.speechSynthesis.getVoices();
 
-  const matching =
-    voices.filter(v =>
-      v.lang.toLowerCase()
-      .startsWith(
-        language.value.substring(0,2).toLowerCase()
-      )
-    );
+  const langCode=
+    language.value.substring(0,2).toLowerCase();
 
-  if(matching.length){
+  const matches=voices.filter(v=>
+    v.lang.toLowerCase().startsWith(langCode)
+  );
 
-    let chosen = matching[0];
+  if(matches.length){
 
-    if(selected==="female"){
+    let chosen=matches[0];
 
-      const female =
-        matching.find(v =>
-          /female|zira|samantha|susan|google/i.test(v.name)
-        );
+    if(voiceType.value==="female"){
 
-      if(female) chosen=female;
+      const f=matches.find(v=>
+        /female|zira|samantha|susan|google/i
+        .test(v.name)
+      );
+
+      if(f) chosen=f;
+
     }
 
-    if(selected==="male"){
+    if(voiceType.value==="male"){
 
-      const male =
-        matching.find(v =>
-          /male|david|alex|daniel|mark|google/i.test(v.name)
-        );
+      const m=matches.find(v=>
+        /male|david|alex|daniel|mark|google/i
+        .test(v.name)
+      );
 
-      if(male) chosen=male;
+      if(m) chosen=m;
+
     }
 
-    utterance.voice=chosen;
+    u.voice=chosen;
+
   }
 
-  utterance.rate=.9;
-  utterance.pitch=
-    selected==="female" ? 1.15 : .9;
+  u.pitch=
+    voiceType.value==="female" ? 1.15 : .95;
 
-  window.speechSynthesis.speak(utterance);
+  window.speechSynthesis.speak(u);
 }
 
 
-/* ---------------------------------------------------------
-   SCENE LIST
---------------------------------------------------------- */
+/* =========================
+   BACKGROUND
+========================= */
+
+function drawBackground(sceneIndex,time,info){
+
+  const w=canvas.width;
+  const h=canvas.height;
+
+  let top="#172957";
+  let bottom="#07101d";
+
+  if(styleBox.value==="anime"){
+    top="#40265d";
+    bottom="#10162d";
+  }
+
+  if(styleBox.value==="2d"){
+    top="#246080";
+    bottom="#122535";
+  }
+
+  if(styleBox.value==="3d"){
+    top="#17365c";
+    bottom="#050a14";
+  }
+
+  if(info.rain){
+
+    top="#18283d";
+    bottom="#080d17";
+
+  }
+
+  const g=ctx.createLinearGradient(
+    0,0,0,h
+  );
+
+  g.addColorStop(0,top);
+  g.addColorStop(1,bottom);
+
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,w,h);
+
+
+  /* stars */
+
+  for(let i=0;i<80;i++){
+
+    const x=
+      (i*149+sceneIndex*31)%w;
+
+    const y=
+      (i*71)%390;
+
+    ctx.fillStyle=
+      "rgba(255,255,255,.65)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      1.7,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+
+  /* moon */
+
+  ctx.fillStyle="#fff1b0";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    w-150,
+    120,
+    55,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* city */
+
+  ctx.fillStyle="#0c1724";
+  ctx.fillRect(0,530,w,190);
+
+  for(let i=0;i<16;i++){
+
+    const bh=
+      80+((i*43)%170);
+
+    const x=i*90;
+
+    ctx.fillStyle=
+      i%2
+      ? "#142438"
+      : "#1a2b40";
+
+    ctx.fillRect(
+      x,
+      530-bh,
+      70,
+      bh
+    );
+
+    for(let yy=545-bh;yy<515;yy+=28){
+
+      ctx.fillStyle=
+        "rgba(255,220,110,.55)";
+
+      for(
+        let xx=x+10;
+        xx<x+60;
+        xx+=23
+      ){
+
+        ctx.fillRect(
+          xx,
+          yy,
+          8,
+          11
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /* road */
+
+  ctx.fillStyle="#121722";
+  ctx.fillRect(0,610,w,110);
+
+  ctx.strokeStyle="#5c6474";
+  ctx.lineWidth=5;
+
+  ctx.setLineDash([35,25]);
+
+  ctx.beginPath();
+  ctx.moveTo(0,665);
+  ctx.lineTo(w,665);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+
+  /* rain */
+
+  if(info.rain){
+
+    ctx.strokeStyle=
+      "rgba(150,190,255,.45)";
+
+    ctx.lineWidth=2;
+
+    for(let i=0;i<180;i++){
+
+      const x=
+        (i*83+time*.35)%w;
+
+      const y=
+        (i*41+time*.8)%650;
+
+      ctx.beginPath();
+
+      ctx.moveTo(x,y);
+      ctx.lineTo(x-8,y+22);
+
+      ctx.stroke();
+
+    }
+
+  }
+
+}
+
+
+/* =========================
+   HUMAN CHARACTER
+========================= */
+
+function drawHuman(
+  x,
+  groundY,
+  female,
+  walk,
+  talking,
+  expression,
+  scale=1
+){
+
+  ctx.save();
+
+  ctx.translate(x,groundY);
+  ctx.scale(scale,scale);
+
+
+  /* walking animation */
+
+  const leg=Math.sin(walk)*24;
+  const arm=Math.sin(walk+Math.PI)*20;
+
+
+  /* shadow */
+
+  ctx.fillStyle="rgba(0,0,0,.35)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    5,
+    70,
+    15,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* legs */
+
+  ctx.strokeStyle="#202735";
+  ctx.lineWidth=22;
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+  ctx.moveTo(-18,100);
+  ctx.lineTo(-28+leg,165);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(18,100);
+  ctx.lineTo(28-leg,165);
+  ctx.stroke();
+
+
+  /* shoes */
+
+  ctx.strokeStyle="#080b10";
+  ctx.lineWidth=17;
+
+  ctx.beginPath();
+  ctx.moveTo(-28+leg,165);
+  ctx.lineTo(-52+leg,165);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(28-leg,165);
+  ctx.lineTo(52-leg,165);
+  ctx.stroke();
+
+
+  /* body */
+
+  ctx.fillStyle=
+    female ? "#d64b9b" : "#3867d6";
+
+  ctx.fillRect(
+    -48,
+    -5,
+    96,
+    120
+  );
+
+
+  /* arms */
+
+  ctx.strokeStyle="#efbd98";
+  ctx.lineWidth=19;
+
+  ctx.beginPath();
+
+  ctx.moveTo(-45,15);
+  ctx.lineTo(
+    -88-arm,
+    65
+  );
+
+  ctx.stroke();
+
+  ctx.beginPath();
+
+  ctx.moveTo(45,15);
+  ctx.lineTo(
+    88+arm,
+    65
+  );
+
+  ctx.stroke();
+
+
+  /* neck */
+
+  ctx.fillStyle="#efbd98";
+
+  ctx.fillRect(
+    -16,
+    -28,
+    32,
+    35
+  );
+
+
+  /* head */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -70,
+    52,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* hair */
+
+  ctx.fillStyle=
+    female ? "#351d29" : "#20242c";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -83,
+    50,
+    Math.PI,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  if(female){
+
+    ctx.fillRect(
+      -48,
+      -83,
+      15,
+      65
+    );
+
+    ctx.fillRect(
+      33,
+      -83,
+      15,
+      65
+    );
+
+  }
+
+
+  /* eyes */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -18,
+    -70,
+    5,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    18,
+    -70,
+    5,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* expression */
+
+  ctx.strokeStyle="#111";
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+
+  if(expression==="sad"){
+
+    ctx.arc(
+      0,
+      -38,
+      16,
+      Math.PI,
+      Math.PI*2
+    );
+
+  }else if(expression==="surprise"){
+
+    ctx.arc(
+      0,
+      -40,
+      8,
+      0,
+      Math.PI*2
+    );
+
+  }else{
+
+    ctx.arc(
+      0,
+      -42,
+      17,
+      0,
+      Math.PI
+    );
+
+  }
+
+  ctx.stroke();
+
+
+  /* talking mouth */
+
+  if(talking){
+
+    ctx.fillStyle="#350f16";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      -40,
+      12,
+      7+Math.abs(Math.sin(Date.now()/80))*8,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   DOG
+========================= */
+
+function drawDog(x,y,move){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  const bounce=
+    Math.sin(move)*7;
+
+  ctx.translate(0,bounce);
+
+
+  /* shadow */
+
+  ctx.fillStyle="rgba(0,0,0,.3)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    55,
+    95,
+    14,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* body */
+
+  ctx.fillStyle="#a96c38";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    95,
+    55,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* head */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -75,
+    -35,
+    55,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* ears */
+
+  ctx.fillStyle="#70411f";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-110,-70);
+  ctx.lineTo(-145,-125);
+  ctx.lineTo(-75,-90);
+
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.moveTo(-45,-75);
+  ctx.lineTo(-20,-125);
+  ctx.lineTo(-10,-60);
+
+  ctx.fill();
+
+
+  /* eye */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -95,
+    -45,
+    7,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* nose */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -128,
+    -35,
+    9,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* legs */
+
+  ctx.strokeStyle="#77491f";
+  ctx.lineWidth=16;
+  ctx.lineCap="round";
+
+  const leg=Math.sin(move)*15;
+
+  ctx.beginPath();
+  ctx.moveTo(-45,35);
+  ctx.lineTo(-50+leg,75);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(35,35);
+  ctx.lineTo(40-leg,75);
+  ctx.stroke();
+
+
+  /* tail */
+
+  ctx.strokeStyle="#a96c38";
+  ctx.lineWidth=18;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    100,
+    -30,
+    55,
+    -1,
+    1
+  );
+
+  ctx.stroke();
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   CAT
+========================= */
+
+function drawCat(x,y,move){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  const jump=Math.abs(Math.sin(move))*12;
+
+  ctx.translate(0,-jump);
+
+
+  ctx.fillStyle="#b9b0a7";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    60,
+    40,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -48,
+    -35,
+    38,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(-75,-55);
+  ctx.lineTo(-68,-100);
+  ctx.lineTo(-45,-65);
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.moveTo(-25,-65);
+  ctx.lineTo(0,-100);
+  ctx.lineTo(2,-50);
+  ctx.fill();
+
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(-60,-40,5,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   LION
+========================= */
+
+function drawLion(x,y,move){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  const b=Math.sin(move)*5;
+
+  ctx.translate(0,b);
+
+  ctx.fillStyle="#9b632e";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    100,
+    55,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle="#d8903e";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -80,
+    -40,
+    65,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle="#6b3c1e";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -80,
+    -40,
+    50,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle="#d8903e";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -80,
+    -40,
+    38,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(-95,-45,6,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.arc(-65,-45,6,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   BIRD
+========================= */
+
+function drawBird(x,y,move){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  const wing=
+    Math.sin(move*2)*25;
+
+  ctx.fillStyle="#55a8e8";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    40,
+    25,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.strokeStyle="#3478b1";
+  ctx.lineWidth=12;
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,0);
+  ctx.lineTo(-35,wing);
+
+  ctx.stroke();
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,0);
+  ctx.lineTo(35,-wing);
+
+  ctx.stroke();
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+function wrapText(text,maxWidth){
+
+  const words=text.split(/\s+/);
+  const lines=[];
+  let line="";
+
+  for(const word of words){
+
+    const test=
+      line
+      ? line+" "+word
+      : word;
+
+    if(
+      ctx.measureText(test).width >
+      maxWidth
+    ){
+
+      if(line)
+        lines.push(line);
+
+      line=word;
+
+    }else{
+
+      line=test;
+
+    }
+
+  }
+
+  if(line)
+    lines.push(line);
+
+  return lines.slice(0,4);
+
+}
+
+
+/* =========================
+   SCENE DRAWING
+========================= */
+
+function drawScene(
+  text,
+  index,
+  total,
+  elapsed
+){
+
+  const info=
+    detectCharacters(text);
+
+  const t=elapsed/1000;
+
+  drawBackground(
+    index,
+    elapsed,
+    info
+  );
+
+
+  /* camera movement */
+
+  const zoom=
+    1+
+    Math.sin(t*.7)*.035;
+
+  const cameraX=
+    Math.sin(t*.45)*18;
+
+
+  ctx.save();
+
+  ctx.translate(
+    canvas.width/2+cameraX,
+    500
+  );
+
+  ctx.scale(zoom,zoom);
+
+  ctx.translate(
+    -canvas.width/2,
+    -500
+  );
+
+
+  /* main character */
+
+  const walk=t*5;
+
+  let expression="happy";
+
+  if(info.action)
+    expression="surprise";
+
+  if(info.rain)
+    expression="sad";
+
+
+  const personX=
+    canvas.width/2-190+
+    Math.sin(t*.7)*65;
+
+
+  const talking=
+    Math.floor(t*4)%2===0;
+
+
+  drawHuman(
+    personX,
+    430+
+    Math.sin(t*3)*4,
+    info.female,
+    walk,
+    talking,
+    expression,
+    1.05
+  );
+
+
+  /* second character for friendship/love/action */
+
+  if(info.love || info.action){
+
+    drawHuman(
+      canvas.width/2+160+
+      Math.sin(t*.8)*45,
+      430,
+      !info.female,
+      walk+2,
+      Math.floor(t*4)%2===0,
+      info.love ? "happy":"surprise",
+      .95
+    );
+
+  }
+
+
+  /* animals */
+
+  if(info.dog){
+
+    drawDog(
+      canvas.width/2+330+
+      Math.sin(t)*80,
+      470,
+      walk
+    );
+
+  }
+
+  if(info.cat){
+
+    drawCat(
+      canvas.width/2+320+
+      Math.sin(t*.8)*70,
+      480,
+      walk
+    );
+
+  }
+
+  if(info.lion){
+
+    drawLion(
+      canvas.width/2+300+
+      Math.sin(t*.6)*70,
+      455,
+      walk
+    );
+
+  }
+
+  if(info.bird){
+
+    drawBird(
+      canvas.width/2+
+      Math.sin(t)*250,
+      190+
+      Math.sin(t*2)*40,
+      walk
+    );
+
+  }
+
+  ctx.restore();
+
+
+  /* cinematic top/bottom bars */
+
+  ctx.fillStyle="rgba(0,0,0,.42)";
+  ctx.fillRect(0,0,canvas.width,55);
+  ctx.fillRect(0,665,canvas.width,55);
+
+
+  /* scene title */
+
+  ctx.fillStyle="#fff";
+  ctx.font="bold 25px Arial";
+
+  ctx.fillText(
+    "SCENE "+(index+1)+" / "+total,
+    35,
+    37
+  );
+
+
+  /* story subtitle */
+
+  ctx.fillStyle="rgba(0,0,0,.72)";
+
+  ctx.fillRect(
+    50,
+    555,
+    1180,
+    100
+  );
+
+  ctx.fillStyle="#fff";
+  ctx.font="25px Arial";
+
+  const lines=
+    wrapText(
+      text,
+      1080
+    );
+
+  lines.forEach(
+    (line,i)=>{
+      ctx.fillText(
+        line,
+        90,
+        595+i*30
+      );
+    }
+  );
+
+
+  /* action flash */
+
+  if(info.action){
+
+    const flash=
+      Math.max(
+        0,
+        Math.sin(t*8)
+      )*.08;
+
+    ctx.fillStyle=
+      "rgba(255,80,50,"+
+      flash+
+      ")";
+
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+  }
+
+}
+
+
+/* =========================
+   SHOW SCENES
+========================= */
 
 function showScenes(scenes){
 
   scenesBox.innerHTML="";
 
-  scenes.forEach((scene,i)=>{
+  scenes.forEach(
+    (scene,i)=>{
 
-    const div=document.createElement("div");
+      const info=
+        detectCharacters(scene);
 
-    div.className="scene";
+      const div=
+        document.createElement("div");
 
-    div.innerHTML =
-      "<b>Scene "+(i+1)+"</b><br>"+
-      scene;
+      div.className="scene";
 
-    scenesBox.appendChild(div);
+      let badges="";
 
-  });
+      if(info.human)
+        badges+='<span class="badge">👤 Human</span>';
+
+      if(info.female)
+        badges+='<span class="badge">👩 Female</span>';
+
+      if(info.dog)
+        badges+='<span class="badge">🐕 Dog</span>';
+
+      if(info.cat)
+        badges+='<span class="badge">🐈 Cat</span>';
+
+      if(info.lion)
+        badges+='<span class="badge">🦁 Lion</span>';
+
+      if(info.bird)
+        badges+='<span class="badge">🐦 Bird</span>';
+
+      if(info.action)
+        badges+='<span class="badge">⚔️ Action</span>';
+
+      if(info.love)
+        badges+='<span class="badge">❤️ Emotion</span>';
+
+      div.innerHTML=
+        "<b>Scene "+(i+1)+"</b><br>"+
+        scene+
+        "<br>"+badges;
+
+      scenesBox.appendChild(div);
+
+    }
+  );
 
 }
 
 
-/* ---------------------------------------------------------
-   CREATE VIDEO
---------------------------------------------------------- */
+/* =========================
+   CREATE MOVIE
+========================= */
 
 async function createMovie(){
 
-  const story =
+  const story=
     storyBox.value.trim();
 
   if(!story){
@@ -838,202 +1763,269 @@ async function createMovie(){
     );
 
     return;
+
   }
 
-  const scenes =
+
+  const scenes=
     makeScenes(story);
 
   if(!scenes.length){
 
     alert("कहानी नहीं मिली।");
-
     return;
+
   }
+
 
   showScenes(scenes);
 
-  const duration =
-    Number(durationBox.value);
 
   running=true;
   stopRequested=false;
 
   createBtn.disabled=true;
   stopBtn.disabled=false;
+
   downloadBtn.style.display="none";
 
   recordedChunks=[];
 
-  statusBox.innerText =
-    "Preparing movie...";
+  bar.style.width="0%";
 
-  beep("start");
+  statusBox.innerText=
+    "🎬 Preparing movie...";
 
-  /*
-    Canvas video stream
-  */
 
-  const stream =
+  initAudio();
+  tone(660,.25,"sine",.05);
+
+
+  const stream=
     canvas.captureStream(30);
 
-  /*
-    Browser-supported video format
-  */
 
   let mime="video/webm";
 
-  if(MediaRecorder.isTypeSupported(
-    "video/webm;codecs=vp9,opus"
-  )){
-    mime="video/webm;codecs=vp9,opus";
+
+  if(
+    MediaRecorder.isTypeSupported(
+      "video/webm;codecs=vp9,opus"
+    )
+  ){
+
+    mime=
+      "video/webm;codecs=vp9,opus";
+
   }
 
-  mediaRecorder =
+
+  if(
+    !window.MediaRecorder
+  ){
+
+    alert(
+      "इस browser में video recording support नहीं है।"
+    );
+
+    running=false;
+    createBtn.disabled=false;
+    stopBtn.disabled=true;
+
+    return;
+
+  }
+
+
+  mediaRecorder=
     new MediaRecorder(
       stream,
       {mimeType:mime}
     );
 
+
   mediaRecorder.ondataavailable=e=>{
 
-    if(e.data && e.data.size>0)
+    if(
+      e.data &&
+      e.data.size>0
+    ){
+
       recordedChunks.push(e.data);
+
+    }
 
   };
 
+
   mediaRecorder.onstop=()=>{
 
-    const blob =
+    const blob=
       new Blob(
         recordedChunks,
         {type:mime}
       );
 
-    const url =
+
+    const url=
       URL.createObjectURL(blob);
+
 
     downloadBtn.style.display="block";
 
+
     downloadBtn.onclick=()=>{
 
-      const a =
+      const a=
         document.createElement("a");
 
       a.href=url;
 
-      a.download =
+      a.download=
         "AI-Cartoon-Movie.webm";
+
+      document.body.appendChild(a);
 
       a.click();
 
+      a.remove();
+
     };
 
-    statusBox.innerText =
-      "🎉 Movie ready! Download दबाएँ।";
+
+    statusBox.innerText=
+      "🎉 Movie Ready! Download दबाएँ।";
 
     bar.style.width="100%";
 
   };
 
+
   mediaRecorder.start();
 
-  /*
-    Divide selected duration
-    between scenes.
-  */
 
-  const sceneTime =
+  const duration=
+    Number(durationBox.value);
+
+
+  const sceneTime=
     Math.max(
-      2000,
-      (duration*1000)/scenes.length
+      3000,
+      (duration*1000)/
+      scenes.length
     );
 
-  for(let i=0;i<scenes.length;i++){
 
-    if(stopRequested) break;
+  const totalMovieTime=
+    scenes.length*
+    sceneTime;
 
-    const scene=scenes[i];
 
-    statusBox.innerText =
-      "🎬 Creating Scene "+
-      (i+1)+" / "+scenes.length;
+  for(
+    let i=0;
+    i<scenes.length;
+    i++
+  ){
 
-    beep("scene");
+    if(stopRequested)
+      break;
 
-    /*
-      Narration
-    */
+
+    activeScene=i;
+
+
+    const scene=
+      scenes[i];
+
+    const info=
+      detectCharacters(scene);
+
+
+    statusBox.innerText=
+      "🎬 Scene "+
+      (i+1)+
+      " / "+
+      scenes.length;
+
+
+    sceneSound(info);
 
     speak(scene);
 
-    const start =
+
+    const start=
       performance.now();
 
+
     while(
-      performance.now()-start < sceneTime
+      performance.now()-
+      start<
+      sceneTime
     ){
 
       if(stopRequested)
         break;
 
-      const now =
+
+      const now=
         performance.now();
+
+      const local=
+        now-start;
+
 
       drawScene(
         scene,
         i,
         scenes.length,
-        now
+        local
       );
 
-      const elapsed =
-        i*sceneTime +
-        (now-start);
 
-      const totalMs =
-        scenes.length*sceneTime;
+      const elapsed=
+        i*sceneTime+
+        local;
 
-      const percent =
+
+      const percent=
         Math.min(
           99,
-          (elapsed/totalMs)*100
+          elapsed/
+          totalMovieTime*
+          100
         );
 
-      bar.style.width =
+
+      bar.style.width=
         percent+"%";
 
+
       await new Promise(
-        resolve =>
-          requestAnimationFrame(resolve)
+        r=>
+          requestAnimationFrame(r)
       );
-    }
 
-    /*
-      Small animal sound cue
-    */
-
-    if(detectCharacter(scene).length){
-      beep("animal");
     }
 
   }
 
+
+  window.speechSynthesis.cancel();
+
+
   if(!stopRequested){
 
-    beep("finish");
+    statusBox.innerText=
+      "✨ Finishing movie...";
 
-    statusBox.innerText =
-      "Finishing movie...";
 
-    /*
-      Keep final frame briefly.
-    */
-
-    const finish =
+    const finish=
       performance.now();
 
+
     while(
-      performance.now()-finish < 1000
+      performance.now()-
+      finish<1200
     ){
 
       drawScene(
@@ -1043,17 +2035,34 @@ async function createMovie(){
         performance.now()
       );
 
+
       await new Promise(
-        resolve =>
-          requestAnimationFrame(resolve)
+        r=>
+          requestAnimationFrame(r)
       );
 
     }
 
+
+    tone(
+      880,
+      .35,
+      "sine",
+      .05
+    );
+
   }
 
-  if(mediaRecorder.state!=="inactive")
+
+  if(
+    mediaRecorder &&
+    mediaRecorder.state!=="inactive"
+  ){
+
     mediaRecorder.stop();
+
+  }
+
 
   running=false;
 
@@ -1063,9 +2072,9 @@ async function createMovie(){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================
    STOP
---------------------------------------------------------- */
+========================= */
 
 stopBtn.onclick=()=>{
 
@@ -1076,15 +2085,15 @@ stopBtn.onclick=()=>{
 
   window.speechSynthesis.cancel();
 
-  statusBox.innerText =
-    "Stopping...";
+  statusBox.innerText=
+    "⛔ Stopping movie...";
 
 };
 
 
-/* ---------------------------------------------------------
-   CREATE
---------------------------------------------------------- */
+/* =========================
+   CREATE BUTTON
+========================= */
 
 createBtn.onclick=()=>{
 
@@ -1093,18 +2102,34 @@ createBtn.onclick=()=>{
 };
 
 
-/* ---------------------------------------------------------
-   DEFAULT SCREEN
---------------------------------------------------------- */
+/* =========================
+   FIRST SCREEN
+========================= */
 
-drawBackground(0,1);
+drawBackground(
+  0,
+  0,
+  {
+    human:true,
+    female:false,
+    dog:false,
+    cat:false,
+    lion:false,
+    bird:false,
+    action:false,
+    love:false,
+    rain:false
+  }
+);
 
 ctx.fillStyle="#fff";
-ctx.font="bold 48px Arial";
+
 ctx.textAlign="center";
 
+ctx.font="bold 48px Arial";
+
 ctx.fillText(
-  "AI CARTOON MOVIE MAKER",
+  "AI CARTOON MOVIE",
   canvas.width/2,
   330
 );
@@ -1120,13 +2145,16 @@ ctx.fillText(
 ctx.textAlign="left";
 
 
-/* Load browser voices */
+/* browser voices */
 
-if("speechSynthesis" in window){
+if(
+  "speechSynthesis" in window
+){
 
-  window.speechSynthesis.onvoiceschanged=()=>{
-    window.speechSynthesis.getVoices();
-  };
+  window.speechSynthesis.onvoiceschanged=
+    ()=>{
+      window.speechSynthesis.getVoices();
+    };
 
 }
 
